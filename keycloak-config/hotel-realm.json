@@ -1,0 +1,38 @@
+{
+  "realm": "hotel-realm",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "hotel-api",
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "webOrigins": ["*"],
+      "redirectUris": ["http://localhost:8080/*"],
+      "attributes": {
+        "exclude.session.state.from.auth.response": "true"
+      },
+      "defaultRoles": ["hotel-admin"]
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin"
+        }
+      ],
+      "realmRoles": ["hotel-admin"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "hotel-admin",
+        "description": "Administrator role for hotel management"
+      }
+    ]
+  }
+}
