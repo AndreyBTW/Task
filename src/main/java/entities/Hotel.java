@@ -2,6 +2,7 @@ package entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -29,7 +30,8 @@ public class Hotel implements Serializable {
     private String notes;
 
     // Конструкторы
-    public Hotel() {}
+    public Hotel() {
+    }
 
     public Hotel(String name, Address address) {
         this.name = name;

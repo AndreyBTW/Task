@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS addresses (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    zip_code VARCHAR(20),
+    city VARCHAR(100) NOT NULL,
+    street VARCHAR(100) NOT NULL,
+    house VARCHAR(20) NOT NULL
+    );
+
+CREATE TABLE IF NOT EXISTS hotels (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    address_id BIGINT NOT NULL,
+    category VARCHAR(20),
+    notes TEXT,
+    FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE CASCADE
+    );

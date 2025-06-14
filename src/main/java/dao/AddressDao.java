@@ -4,18 +4,22 @@ import entities.Address;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.util.List;
 import java.util.Optional;
 
 @Stateless
 public class AddressDao {
 
-    @PersistenceContext(unitName = "hotelPU")
+    @PersistenceContext
     private EntityManager em;
 
-    public Address create(Address address) {
+    public void create(Address address) {
         em.persist(address);
-        return address;
+    }
+
+    public void update(Address address) {
+        em.merge(address);
     }
 
     public void delete(Long id) {

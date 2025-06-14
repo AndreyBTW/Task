@@ -2,22 +2,25 @@ package rest;
 
 
 import dao.HotelDao;
+import dto.AddressDto;
 import dto.HotelDto;
-import jakarta.annotation.security.RolesAllowed;
+import entities.Address;
 import jakarta.ws.rs.Consumes;
 import entities.Hotel;
 import dao.AddressDao;
+import mappers.AddressMapper;
 import mappers.HotelMapper;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@RolesAllowed("hotel-admin")
 @Path("/hotels")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -31,17 +34,25 @@ public class HotelResource {
 
     @POST
     public Response createHotel(@Valid HotelDto hotelDto, @Context UriInfo uriInfo) {
-        // Преобразуем DTO в сущность
-        Hotel hotel = HotelMapper.toEntity(hotelDto);
-
-        // Сохраняем адрес если он новый
-        if (hotelDto.getAddress().getId() == null) {
-            addressDao.create(hotel.getAddress());
+        // Проверяем и сохраняем адрес
+        AddressDto addressDto = hotelDto.getAddress();
+        if (addressDto.getId() == null) {
+            // Если адрес новый - создаем его
+            Address address = AddressMapper.toEntity(addressDto);
+            addressDao.create(address);
+            addressDto.setId(address.getId());
+        } else {
+            // Если адрес существует - проверяем его наличие
+            Optional<Address> existingAddress = addressDao.findById(addressDto.getId());
+            if (existingAddress.isEmpty()) {
+                throw new NotFoundException("Address with id " + addressDto.getId() + " not found");
+            }
         }
 
+        // Создаем отель
+        Hotel hotel = HotelMapper.toEntity(hotelDto);
         hotelDao.create(hotel);
 
-        // Формируем URI созданного ресурса
         URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(hotel.getId()))
                 .build();

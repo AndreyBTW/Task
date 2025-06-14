@@ -1,0 +1,22 @@
+embed-server --std-out=echo
+
+# Регистрируем MariaDB‑драйвер
+/subsystem=datasources/jdbc-driver=mariadb:add( \
+    driver-name=mariadb, \
+    driver-module-name=com.mariadb, \
+    driver-class-name=org.mariadb.jdbc.Driver \
+)
+
+# Создаём DataSource с JNDI, который ждёт приложение
+data-source add --name=HotelDS \
+    --driver-name=mariadb \
+    --jndi-name=java:/jboss/datasources/HotelDS \
+    --connection-url=jdbc:mariadb://mariadb:3306/hoteldb \
+    --user-name=dbuser \
+    --password=dbpass \
+    --use-ccm=false \
+    --max-pool-size=25 \
+    --blocking-timeout-wait-millis=5000
+
+stop-embedded-server
+

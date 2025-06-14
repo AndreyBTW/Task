@@ -2,6 +2,7 @@ package entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -28,7 +29,8 @@ public class Address implements Serializable {
     private String house;
 
     // Конструкторы
-    public Address() {}
+    public Address() {
+    }
 
     public Address(String city, String street, String house) {
         this.city = city;
